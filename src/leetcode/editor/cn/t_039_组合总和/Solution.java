@@ -80,9 +80,6 @@ class Solution {
             // 移除尾部元素
             tmp.removeLast();
         }
-        for (int num: candidates) {
-
-        }
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
