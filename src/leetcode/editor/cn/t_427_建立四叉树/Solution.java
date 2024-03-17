@@ -163,38 +163,43 @@ class Node {
 };
 */
 
+/**
+ * 解答成功:
+ * 	执行耗时:0 ms,击败了100.00% 的Java用户
+ * 	内存消耗:43.3 MB,击败了48.67% 的Java用户
+ */
 class Solution {
     public Node construct(int[][] grid) {
-        
+        return process(grid, 0, 0, grid.length, grid.length);
     }
 
-    private Node process(int[][] grid, int xMin, int xMax, int yMin, int yMax) {
+    private Node process(int[][] grid, int r0, int c0, int r1, int c1) {
 
-        int xMid = (xMin + xMax) >> 1;
-        int yMid = (yMin + yMax) >> 1;
-
-        // 分四部分递归处理
-        Node topLeft = process(grid, xMin, xMid, yMin, yMid);
-        Node topRight = process(grid, xMin, xMid, yMid, yMax);
-        Node bottomLeft = process(grid, xMid, xMax, yMin, yMid);
-        Node bottomRight = process(grid, xMid, xMax, yMid, yMax);
-
-        if (topLeft == null && topRight == null && bottomLeft == null && bottomRight == null) {
-            // 当前节点下述节点
-            return null;
-        }
-
-        // 计算当前节点逻辑
-        Node root = new Node();
-        if (topLeft.isLeaf & topRight.isLeaf & bottomLeft.isLeaf & bottomRight.isLeaf) {
-            // 均为叶子节点时, 检查四个叶子结点是否一致
-            boolean isSame = topLeft.val == topRight.val && topLeft.val == bottomLeft.val && topLeft.val == bottomRight.val;
-            if (isSame) {
-                // 当前节点也应该为叶子节点
-
+        boolean same = true;
+        for (int i = r0; i < r1; ++i) {
+            for (int j = c0; j < c1; ++j) {
+                if (grid[i][j] != grid[r0][c0]) {
+                    same = false;
+                    break;
+                }
+            }
+            if (!same) {
+                break;
             }
         }
 
+        if (same) {
+            return new Node(grid[r0][c0] == 1, true);
+        }
+
+        return new Node(
+                true,
+                false,
+                process(grid, r0, c0, (r0 + r1) / 2, (c0 + c1) / 2),
+                process(grid, r0, (c0 + c1) / 2, (r0 + r1) / 2, c1),
+                process(grid, (r0 + r1) / 2, c0, r1, (c0 + c1) / 2),
+                process(grid, (r0 + r1) / 2, (c0 + c1) / 2, r1, c1)
+        );
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
