@@ -39,14 +39,22 @@ package leetcode.editor.cn.t_004_寻找两个正序数组的中位数;
 //
 // Related Topics 数组 二分查找 分治 👍 7051 👎 0
 
-
+/**
+ * 解答成功:
+ * 	执行耗时:1 ms,击败了100.00% 的Java用户
+ * 	内存消耗:44.7 MB,击败了74.18% 的Java用户
+ */
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int n1Cnt = nums1.length;
-        int n2Cnt = nums1.length;
+        int n2Cnt = nums2.length;
 
+        int mid1 = (n1Cnt + n2Cnt + 1) >> 1;
+        int mid2 = (n1Cnt + n2Cnt + 2) >> 1;
 
+        return (getKth(nums1, nums2, mid1, 0, n1Cnt - 1, 0, n2Cnt - 1)
+                + getKth(nums1, nums2, mid2, 0, n1Cnt - 1, 0, n2Cnt - 1)) / 2;
     }
 
     /**
@@ -60,19 +68,22 @@ class Solution {
      * @param n2R nums2右侧
      * @return 第k大元素
      */
-    private int getKth(int[] nums1, int[] nums2, int k, int n1L, int n1R, int n2L, int n2R) {
+    private double getKth(int[] nums1, int[] nums2, int k, int n1L, int n1R, int n2L, int n2R) {
         int l1 = n1R - n1L + 1, l2 = n2R - n2L + 1;
         // 确保永远都是n1的长度短
         if (l1 > l2) return getKth(nums2, nums1, k, n2L, n2R, n1L, n1R);
         // 若l1长度为0, 则直接从l2中取
         if (l1 == 0) return nums2[n2L + k - 1];
 
-        int m = (l1 + l2) >> 1;
+        if (k == 1) return Math.min(nums1[n1L], nums2[n2L]);
+
         // 计算l1索引
-        int num1m = Math.min(n1L + m, n1R), num2m = Math.min(n2L + m, n2R);
+        int num1m = n1L + Math.min(k / 2, l1) - 1, num2m = n2L + Math.min(k / 2, l2) - 1;
         if (nums1[num1m] > nums2[num2m]) {
             // nums2前半部分皆不会属于第k大元素
-            return getKth(nums1, nums2, k - m, )
+            return getKth(nums1, nums2, k - (num2m - n2L + 1), n1L, n1R, num2m + 1, n2R);
+        } else {
+            return getKth(nums1, nums2, k - (num1m - n1L + 1), num1m + 1, n1R, n2L, n2R);
         }
     }
 }
