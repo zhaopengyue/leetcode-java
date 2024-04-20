@@ -32,7 +32,11 @@ package leetcode.editor.cn.t_137_只出现一次的数字_i_i;
 //
 // Related Topics 位运算 数组 👍 1209 👎 0
 
-
+/**
+ * 解答成功:
+ * 	执行耗时:0 ms,击败了100.00% 的Java用户
+ * 	内存消耗:44.3 MB,击败了68.93% 的Java用户
+ */
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     // 参考：https://leetcode.cn/problems/single-number-ii/solutions/8944/single-number-ii-mo-ni-san-jin-zhi-fa-by-jin407891/?envType=study-plan-v2&envId=top-interview-150
