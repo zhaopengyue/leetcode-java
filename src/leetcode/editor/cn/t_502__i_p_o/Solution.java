@@ -48,54 +48,30 @@ package leetcode.editor.cn.t_502__i_p_o;
 // 
 //
 // Related Topics 贪心 数组 排序 堆（优先队列） 👍 302 👎 0
+/**
+ * 解答成功:
+ * 	执行耗时:89 ms,击败了29.77% 的Java用户
+ * 	内存消耗:61.2 MB,击败了22.57% 的Java用户
+ */
 
 import java.util.*;
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
-        // 堆
-        PriorityQueue<Item> heap = new PriorityQueue<>();
-        List<Item> list = new ArrayList<>(k);
-        int ans = w;
-
-        for (int i = 0; i < profits.length; i++) {
-            heap.add(new Item(capital[i], profits[i]));
+        int n = profits.length;
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            list.add(new int[]{capital[i], profits[i]});
         }
-
-        for (int i = 0; i < k; i++) {
-            if (! list.isEmpty()) {
-                heap.addAll(list);
-                list.clear();
-            }
-            // 选取一个利润最大的
-            while (! heap.isEmpty()) {
-                Item o = heap.poll();
-                if (ans >= o.c) {
-                    // 买入
-                    ans = ans + o.p;
-                    break;
-                } else {
-                    list.add(o);
-                }
-            }
+        list.sort(Comparator.comparingInt(a -> a[0]));
+        PriorityQueue<Integer> q = new PriorityQueue<>((a,b)->b-a);
+        int i = 0;
+        while (k-- > 0) {
+            while (i < n && list.get(i)[0] <= w) q.add(list.get(i++)[1]);
+            if (q.isEmpty()) break;
+            w += q.poll();
         }
-
-        return ans;
-    }
-    private static class Item implements Comparable<Item>{
-        int c;
-        int p;
-
-        Item(int _c, int _p) {
-            this.c = _c;
-            this.p = _p;
-        }
-
-        @Override
-        public int compareTo(Item o) {
-            // 利润越高排序越靠前, 利润低时选择成本角度
-            return o.p == p ? c - o.c : o.p - p;
-        }
+        return w;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
