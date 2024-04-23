@@ -42,72 +42,71 @@ package leetcode.editor.cn.t_224_基本计算器;
 //
 // Related Topics 栈 递归 数学 字符串 👍 1034 👎 0
 
-import java.util.LinkedList;
+import java.util.*;
+
+/**
+ * 解答成功:
+ * 	执行耗时:18 ms,击败了38.91% 的Java用户
+ * 	内存消耗:44.1 MB,击败了35.31% 的Java用户
+ */
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int calculate(String s) {
-        // 操作数栈
-        LinkedList<Character> opStack = new LinkedList<>();
-        // 符号栈
-        LinkedList<Integer> numStack = new LinkedList<>();
-
+        // 存放所有的数字
+        Deque<Integer> nums = new ArrayDeque<>();
+        // 为了防止第一个数为负数，先往 nums 加个 0
+        nums.addLast(0);
+        // 将所有的空格去掉
         s = s.replaceAll(" ", "");
-        s = s.replaceAll("\\(\\+", "(0+");
-        s = s.replaceAll("\\(-", "(0-");
-
+        // 存放所有的操作，包括 +/-
+        Deque<Character> ops = new ArrayDeque<>();
+        int n = s.length();
         char[] cs = s.toCharArray();
-        int len = cs.length;
-        // 添加0, 防止开始为负数的特殊处理
-        if (cs[0] == '-' || cs[0] == '+') numStack.push(0);
-        int i = 0;
-
-        while (i < len) {
+        for (int i = 0; i < n; i++) {
             char c = cs[i];
-            int inc = 1;
             if (c == '(') {
-                opStack.push(c);
+                ops.addLast(c);
             } else if (c == ')') {
-                // 计算一下存入操作数栈
-                calc(numStack, opStack);
-                // 将最近一个左括号出栈
-                opStack.pop();
-            } else if (c == '+' || c == '-'){
-                // 操作符
-                if (! opStack.isEmpty() && opStack.peek() != '(') calc(numStack, opStack);
-                opStack.push(c);
-            } else {
-                int j = i + 1;
-                int num = c - 48; // 转化int
-                while (j < len && cs[j] >= '0' && cs[j] <= '9') {
-                    num = num * 10 + cs[j] - 48;
-                    j++;
+                // 计算到最近一个左括号为止
+                while (!ops.isEmpty()) {
+                    char op = ops.peekLast();
+                    if (op != '(') {
+                        calc(nums, ops);
+                    } else {
+                        ops.pollLast();
+                        break;
+                    }
                 }
-                inc = j - i;
-                numStack.push(num);
+            } else {
+                if (isNum(c)) {
+                    int u = 0;
+                    int j = i;
+                    // 将从 i 位置开始后面的连续数字整体取出，加入 nums
+                    while (j < n && isNum(cs[j])) u = u * 10 + (int)(cs[j++] - '0');
+                    nums.addLast(u);
+                    i = j - 1;
+                } else {
+                    if (i > 0 && (cs[i - 1] == '(' || cs[i - 1] == '+' || cs[i - 1] == '-')) {
+                        nums.addLast(0);
+                    }
+                    // 有一个新操作要入栈时，先把栈内可以算的都算了
+                    while (!ops.isEmpty() && ops.peekLast() != '(') calc(nums, ops);
+                    ops.addLast(c);
+                }
             }
-            i += inc;
         }
-        // 最后再计算一次
-        calc(numStack, opStack);
-
-        // 取出最后计算结果
-        
-        return numStack.pop();
+        while (!ops.isEmpty()) calc(nums, ops);
+        return nums.peekLast();
     }
-
-    private void calc(LinkedList<Integer> numStack, LinkedList<Character> opStack) {
-        // 数字不足, 不处理
-        if (numStack.size() < 2) return;
-        if (opStack.isEmpty()) return;
-        int a = numStack.pop();
-        int b = numStack.pop();
-        char op = opStack.pop();
-
-        numStack.push(op == '+' ? a + b : b - a);
+    void calc(Deque<Integer> nums, Deque<Character> ops) {
+        if (nums.isEmpty() || nums.size() < 2) return;
+        if (ops.isEmpty()) return;
+        int b = nums.pollLast(), a = nums.pollLast();
+        char op = ops.pollLast();
+        nums.addLast(op == '+' ? a + b : a - b);
     }
-
-    public static void main(String[] args) {
-        System.out.println(new Solution().calculate( " 30"));
+    boolean isNum(char c) {
+        return Character.isDigit(c);
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
