@@ -42,16 +42,18 @@ class Solution {
 
         int preSum = 0;
 
-       map.put(0, 1);
+        map.put(0, 1);
+
         for (int num : nums) {
+            // 直接查找前面有多少个和为k的子数组
             if (map.containsKey(preSum + num - k)) {
                 res += map.get(preSum + num - k);
             }
             map.put(preSum + num, map.getOrDefault(preSum + num, 0) + 1);
             preSum += num;
-        }
+       }
 
-        return res;
+       return res;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

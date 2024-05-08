@@ -1,0 +1,50 @@
+class Solution {
+    public String minWindow(String s, String t) {
+        Map<Character, Integer> needs = new HashMap<Character, Integer>();
+        int needNum = t.length();
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            needs.put(t.charAt(i), needs.getOrDefault(c, 0) + 1);
+        }
+        int i = 0;
+        int j = 0;
+
+        int minI = 0;
+        int minJ = -1;
+        int minSize = Integer.MAX_VALUE;
+
+        while (j < s.length()) {
+            char c = s.charAt(j);
+            if (needs.containsKey(c)) {
+                needs.put(c, needs.get(c) - 1);
+                if (needs.get(c) >= 0) needNum -= 1;
+            }
+
+            if (needNum == 0) {
+                // 尽可能向右缩减i
+                while (i <= j) {
+                    c = s.charAt(i);
+                    if (needs.containsKey(c)) {
+                        if (needs.get(c) == 0) break;
+                        needs.put(c, needs.get(c) + 1); 
+                    }
+                    i++;
+                }
+
+                if (j - i + 1 < minSize) {
+                    minI = i;
+                    minJ = j;
+                    minSize = j - i + 1;
+                }
+                // 将左边界右移一位,开始新的
+                needs.put(s.charAt(i), needs.get(s.charAt(i)) + 1);
+                needNum++;
+                i++;
+            }
+            j++;
+        }
+        return s.substring(minI, minJ + 1);
+    }
+}
+//runtime:11 ms
+//memory:43 MB
