@@ -1,0 +1,33 @@
+object Solution {
+  def searchMatrix(matrix: Array[Array[Int]], target: Int): Boolean = {
+    val m = matrix.length
+    if (m == 0) return false
+
+    val n = matrix.head.length
+
+    // 左下角的元素是这一行中最小的元素，同时又是这一列中最大的元素。
+    var i = m - 1
+    var j = 0
+
+    while (i >= 0 && j <= n - 1) {
+      val num = matrix(i)(j)
+
+      // 若左下角元素等于目标，则找到
+      if (num == target) return true
+
+      // 若左下角元素小于目标，则目标不可能存在于当前矩阵的第一列，因为当前列最大的元素都比target小，故
+      // 问题规模可以减小为在去掉第一列的子矩阵中寻找目标
+      if (num < target) {
+        j += 1
+      }  else {
+        
+        i -= 1
+      }
+
+    }
+    false
+  }
+}
+
+//runtime:588 ms
+//memory:64 MB

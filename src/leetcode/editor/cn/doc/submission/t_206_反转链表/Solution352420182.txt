@@ -1,0 +1,23 @@
+/**
+ * Definition for singly-linked list.
+ * class ListNode(_x: Int = 0, _next: ListNode = null) {
+ *   var next: ListNode = _next
+ *   var x: Int = _x
+ * }
+ */
+object Solution {
+    def reverseList(head: ListNode): ListNode = {
+        var prev: ListNode = null
+        var p = head
+        while (p != null) {
+            val next = p.next
+            p.next = prev
+            prev = p
+            p = next
+        }
+        prev
+    }
+}
+
+//runtime:520 ms
+//memory:55.8 MB

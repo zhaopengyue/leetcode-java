@@ -1,0 +1,49 @@
+
+import scala.collection.mutable.ListBuffer
+
+object Solution {
+  def spiralOrder(matrix: Array[Array[Int]]): List[Int] = {
+    val rs = new ListBuffer[Int]()
+
+    var top = 0
+    var floor = matrix.length - 1
+    var left = 0
+    var right = matrix.head.length - 1
+    var numFlag = matrix.length * matrix.head.length
+
+    while (numFlag >= 1) {
+      // left -> right
+      for (i <- left to right if numFlag >= 1) {
+        rs += matrix(top)(i)
+        numFlag -= 1
+      }
+      top += 1
+
+      // top -> floor
+      for (i <- top to floor if numFlag >= 1) {
+        rs += matrix(i)(right)
+        numFlag -= 1
+      }
+      right -= 1
+
+      // right -> left
+      for (i <- (left to right).reverse if numFlag >= 1) {
+        rs += matrix(floor)(i)
+        numFlag -= 1
+      }
+      floor -= 1
+
+      // floor -> top
+      for (i <- (top to floor).reverse if numFlag >= 1) {
+        rs += matrix(i)(left)
+        numFlag -= 1
+      }
+      left += 1
+    }
+
+    rs.toList
+  }
+}
+
+//runtime:464 ms
+//memory:53.9 MB

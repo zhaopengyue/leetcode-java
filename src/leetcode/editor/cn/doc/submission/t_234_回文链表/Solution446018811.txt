@@ -1,0 +1,48 @@
+/**
+ * Definition for singly-linked list.
+ * class ListNode(_x: Int = 0, _next: ListNode = null) {
+ *   var next: ListNode = _next
+ *   var x: Int = _x
+ * }
+ */
+object Solution {
+    def isPalindrome(head: ListNode): Boolean = {
+
+      if (head.next == null) return true
+
+      var p, q = head
+      // 快慢指针, 遍历结束后p即为中间
+      while (q.next != null && q.next.next != null) {
+        p = p.next
+        q = q.next.next
+      }
+
+      var preP = p
+      p = p.next
+      // 反转p后续节点
+      while (p != null) {
+        val tmp = p.next
+        p.next = preP
+        preP = p
+        p = tmp
+      }
+
+      p = head
+      // preP即为反转后的新头节点
+      q = preP
+
+      while (true) {
+        if (p.x != q.x) return false
+        if (p.next == q.next) return true // 奇数情况, 退出循环
+        if (p.next == q || q.next == p) return p.x == q.x// 偶数情况, 退出循环
+        p = p.next
+        q= q.next
+      }
+
+      // 任何情况下会在循环内直接返回结果, 此处false仅声明语法
+      false
+    }
+}
+
+//runtime:820 ms
+//memory:66.9 MB
