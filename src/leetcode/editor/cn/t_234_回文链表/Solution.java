@@ -41,6 +41,12 @@ class ListNode {
     ListNode(int val) { this.val = val; }
     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
 }
+
+/**
+ * 解答成功:
+ * 	执行耗时:3 ms,击败了99.72% 的Java用户
+ * 	内存消耗:58.5 MB,击败了59.27% 的Java用户
+ */
 //leetcode submit region begin(Prohibit modification and deletion)
 /**
  * Definition for singly-linked list.
@@ -81,7 +87,6 @@ class Solution {
             p = p.next;
             q = q.next;
         }
-        return false;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
