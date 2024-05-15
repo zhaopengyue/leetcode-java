@@ -1,0 +1,32 @@
+object Solution {
+    def dailyTemperatures(temperatures: Array[Int]): Array[Int] = {
+        // 存放下标
+        val stack = new scala.collection.mutable.Stack[Int]()
+
+        temperatures.zipWithIndex.reverse.map(item => {
+          var isBreak = false
+          val v = item._1
+          val index = item._2
+          var next = index
+          while (!isBreak) {
+              if (stack.isEmpty) {
+                  isBreak = true
+                  stack.push(index)
+              } else {
+                  if (v < temperatures(stack.head)) {
+                      next = stack.head
+                      stack.push(index)
+                      isBreak = true
+                  } else {
+                      stack.pop()
+                  }
+              }
+          }
+
+          next - index
+        }).reverse
+    }
+}
+
+//runtime:1084 ms
+//memory:73.9 MB

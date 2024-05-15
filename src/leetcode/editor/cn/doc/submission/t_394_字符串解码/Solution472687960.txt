@@ -1,0 +1,38 @@
+object Solution {
+
+    val numStack = new scala.collection.mutable.Stack[String]()
+    val strStack = new scala.collection.mutable.Stack[String]()
+
+    def decodeString(s: String): String = {
+        numStack.clear()
+        strStack.clear()
+
+        // 初始时填入一个空字符,最终计算结果会合并到该层
+        strStack.push("")
+
+
+        var tmpNumStr = ""
+        // 统一字符串格式
+        s"1[$s]".foreach(c => {
+            if (c >= 'a' && c <= 'z') {
+                strStack.push(strStack.pop() + c.toString)
+            } else if (c >= '0' && c <= '9') {
+                tmpNumStr = tmpNumStr + c.toString
+            } else if (c == '[') {
+                numStack.push(tmpNumStr)
+                strStack.push("")
+                tmpNumStr = ""
+            } else {
+                // c == ]
+                val num = numStack.pop().toInt
+                val str = strStack.pop()
+                strStack.push(strStack.pop() + str * num)
+            }
+        })
+        strStack.head
+    }
+
+}
+
+//runtime:512 ms
+//memory:55.6 MB

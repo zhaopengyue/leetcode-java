@@ -1,0 +1,28 @@
+class Solution {
+
+    private int max = Integer.MIN_VALUE;
+
+    // 函数定义为计算为以root节点为根节点的路径的最大值
+    public int maxPathSum(TreeNode root) {
+        max = -1000;
+        return Math.max(f(root), max);
+    }
+
+    private int f(TreeNode root) {
+        if (root == null) return -1000;
+
+        int left = f(root.left);
+        int right = f(root.right);
+
+        max = Arrays
+            .asList(max, root.val + left + right, left, right)
+            .stream()
+            .reduce(root.val, Math::max); 
+        return Arrays
+            .asList(root.val, left + root.val, right + root.val)
+            .stream()
+            .reduce(root.val, Math::max); 
+    }
+}
+//runtime:14 ms
+//memory:43.8 MB

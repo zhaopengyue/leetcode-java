@@ -77,7 +77,7 @@ class ListNode {
  */
 public class Solution {
     public boolean hasCycle(ListNode head) {
-        
+        return true;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)

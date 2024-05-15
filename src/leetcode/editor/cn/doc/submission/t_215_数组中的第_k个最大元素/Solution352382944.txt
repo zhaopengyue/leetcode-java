@@ -1,0 +1,69 @@
+import java.util.PriorityQueue
+import scala.annotation.tailrec
+object Solution {
+    def findKthLargest(nums: Array[Int], k: Int): Int = {
+        // 快排方式
+        //deal(nums, k, 0, nums.length - 1)
+        // 方案2：也可以采用维持一个小顶堆的方式，全部数据插入完成后取出堆顶元素
+        heapM(nums, k)
+    }
+
+    def oneSort(nums: Array[Int], start: Int, end: Int): Int = {
+        val flag = nums(end)
+        var i = start
+        var j = start
+        while (j < end) {
+            // 将大于end的都放在左边
+            if (nums(j) > flag) {
+                swap(nums, i, j)
+                i += 1
+            }
+            j += 1
+        }
+        swap(nums, i, end)
+        i
+    }
+
+    @tailrec
+    def deal(nums: Array[Int], k: Int, start: Int, end: Int): Int = {
+        if (start > end) {
+            return -1
+        }
+        val index = oneSort(nums, start, end)
+        if (index + 1 == k) return nums(index)
+        if (index + 1 > k) {
+            deal(nums, k, start, index - 1)
+        }  else {
+            deal(nums, k, index + 1, end)
+        }
+    }
+
+    def swap(nums: Array[Int], i: Int, j: Int): Unit = {
+        val tmp = nums(j)
+        nums(j) = nums(i)
+        nums(i) = tmp
+    }
+
+    def heapM(nums: Array[Int], k: Int): Int = {
+        val heap = new PriorityQueue[Int](k)
+        for (item <- nums.zipWithIndex) {
+            if (item._2 < k) {
+                // 堆未满，直接插入
+                heap.add(item._1)
+            } else {
+                // 堆满了，检查大小
+                if (item._1 > heap.peek()) {
+                    // 说明还有更大的，先删除后插入
+                    heap.poll()
+                    heap.add(item._1)
+                }
+                // 否则不操作
+            }
+        }
+        // 返回堆顶即可
+        heap.peek()
+    }
+}
+
+//runtime:820 ms
+//memory:70.4 MB

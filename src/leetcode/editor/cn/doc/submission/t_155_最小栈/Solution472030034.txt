@@ -1,0 +1,48 @@
+case class Node(var x: Int = Int.MaxValue, var next: Node = null, var prev: Node = null, var m_prev: Node = null)
+
+class MinStack() {
+
+    private val head = Node()
+    private var tail = head
+    private var mini = head
+
+
+    def push(v: Int): Unit = {
+        val node = Node(v)
+        node.prev = tail
+        tail.next = node
+        tail = node
+        if (v < mini.x) {
+            node.m_prev = mini
+            mini = node
+        }
+    }
+
+    def pop() {
+        if (mini == tail) mini = mini.m_prev
+        tail = tail.prev
+        // 便于GC
+        tail.next = null
+    }
+
+    def top(): Int = {
+        tail.x
+    }
+
+    def getMin(): Int = {
+        mini.x
+    }
+
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * var obj = new MinStack()
+ * obj.push(`val`)
+ * obj.pop()
+ * var param_3 = obj.top()
+ * var param_4 = obj.getMin()
+ */
+
+//runtime:592 ms
+//memory:59.6 MB

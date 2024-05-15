@@ -1,0 +1,49 @@
+
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(_value: Int = 0, _left: TreeNode = null, _right: TreeNode = null) {
+ * var value: Int = _value
+ * var left: TreeNode = _left
+ * var right: TreeNode = _right
+ * }
+ */
+import scala.collection.mutable
+object Solution {
+
+  // 保存从root到currNode为止每一个前缀和对应的个数
+  private var map: mutable.HashMap[Long, Int] = _
+
+  def pathSum(root: TreeNode, targetSum: Int): Int = {
+    map = new mutable.HashMap[Long, Int]()
+    map.put(0, 1)
+    rootSum(root, 0, targetSum)
+  }
+
+
+  def rootSum(root: TreeNode, currSum: Long, targetSum: Long): Int = {
+    if (root == null) return 0
+
+    val curr = currSum + root.value
+
+    // 两者差值
+    val other = curr - targetSum
+    var ret = 0
+
+    if (map.contains(other)) ret += map(other)
+
+    // 加入前缀和
+    map.put(curr, map.getOrElse(curr, 0) + 1)
+
+    // 计算下一层
+    ret += rootSum(root.left, curr, targetSum)
+    ret += rootSum(root.right, curr, targetSum)
+
+    // 回退当前节点时清除当前节点的前缀和, 防止干扰
+    map.put(curr, map(curr) - 1)
+
+    ret
+  }
+}
+
+//runtime:536 ms
+//memory:57.4 MB

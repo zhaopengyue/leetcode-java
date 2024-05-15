@@ -1,0 +1,43 @@
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int i = 0;
+        int j = nums.length - 1;
+        while (i <= j) {
+            int index = oneSort(nums, i, j);
+            if (index + 1 == k) {
+                return nums[index];
+            } else if (index < k) {
+                // 从右半部分查找
+                i = index + 1;
+            } else {
+                j = index - 1;
+            }
+        }
+        return 0;
+    }
+
+    public int oneSort(int[] nums, int start, int end) {
+        int flag = nums[end];
+        int i = start;
+        int j = start;
+        while (j <= end - 1) {
+            int num = nums[j];
+            if (num > flag) {
+                // 将大于flag的num放到左半部分
+                swap(nums, i, j);
+                i += 1;
+            }
+            j += 1;
+        }
+        swap(nums, i, end);
+        return i;
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}
+//runtime:21 ms
+//memory:49.4 MB
