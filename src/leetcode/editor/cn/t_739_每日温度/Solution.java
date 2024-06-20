@@ -38,7 +38,11 @@ package leetcode.editor.cn.t_739_每日温度;
 
 import java.util.*;
 
-
+/**
+ * 解答成功:
+ * 	执行耗时:24 ms,击败了88.47% 的Java用户
+ * 	内存消耗:59.2 MB,击败了37.85% 的Java用户
+ */
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int[] dailyTemperatures(int[] temperatures) {
@@ -52,7 +56,7 @@ class Solution {
             int v = temperatures[i];
             // 在单调栈中寻找大于当前值的那个元素
             while (! stack.isEmpty()) {
-                if (v > temperatures[stack.peek()]) {
+                if (v >= temperatures[stack.peek()]) {
                     stack.pop();
                 } else {
                     break;
