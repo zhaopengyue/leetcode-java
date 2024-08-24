@@ -63,6 +63,12 @@ class ListNode {
         next = null;
     }
 }
+
+/**
+ * 解答成功:
+ * 	执行耗时:0 ms,击败了100.00% 的Java用户
+ * 	内存消耗:43.4 MB,击败了42.44% 的Java用户
+ */
 //leetcode submit region begin(Prohibit modification and deletion)
 /**
  * Definition for singly-linked list.
@@ -77,7 +83,16 @@ class ListNode {
  */
 public class Solution {
     public boolean hasCycle(ListNode head) {
-        return true;
+        if (head == null) return false;
+        ListNode p = head, q = head;
+
+        while (q != null && q.next != null) {
+            p = p.next;
+            q = q.next.next;
+            if (p == q) return true;
+        }
+
+        return false;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
